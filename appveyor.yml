@@ -12,7 +12,8 @@ before_build:
   - nuget restore
 build:
   publish_nuget: true
-  verbosity: minimal
+  publish_nuget_symbols: true
+  verbosity: detailed
 configuration: Release
 environment:
   AppVeyorAPIToken:
