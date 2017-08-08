@@ -1,13 +1,11 @@
-﻿using System;
-using ElGamalExt.Homomorphism;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ElGamalExt.Homomorphism;
+using Xunit;
 
 namespace ElGamalHomoTests
 {
-    [TestClass]
     public class ElGamalHomoTests
     {
-        [TestMethod]
+        [Fact]
         public void TestZero()
         {
             byte[] p_first = { 0x01 };
@@ -17,7 +15,7 @@ namespace ElGamalHomoTests
 
             var res = ElGamalHomomorphism.Multiply(p_first, p_second, p_P);
 
-            Assert.AreEqual(expected[0], res[0]);
+            Assert.Equal(expected[0], res[0]);
         }
     }
 }
