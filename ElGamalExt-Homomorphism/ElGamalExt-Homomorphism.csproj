@@ -1,5 +1,4 @@
-﻿<Project>
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
     <PackageVersion>0.10.0.0</PackageVersion>
@@ -7,13 +6,5 @@
     <Company>Nanyang Technological Unviersity</Company>
     <Product>ElGamalExt.Homomorphism</Product>
     <Authors>Vasily Sidorov (bazzilic)</Authors>
-    <Configurations>Debug;Release;Deploy EGExt.Hom</Configurations>
   </PropertyGroup>
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy EGExt.Hom|AnyCPU'">
-  </PropertyGroup>
-  <Target Name="AfterBuild" Condition="'$(Configuration)' == 'Deploy EGExt.Hom'">
-    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\..\.deploy\EGExt.Hom-deployLocalNuGet.ps1&quot;">
-    </Exec>
-  </Target>
 </Project>
