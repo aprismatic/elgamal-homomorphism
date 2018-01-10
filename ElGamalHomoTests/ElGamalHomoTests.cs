@@ -5,7 +5,7 @@ namespace ElGamalHomoTests
 {
     public class ElGamalHomoTests
     {
-        [Fact]
+        [Fact(DisplayName = "Zero")]
         public void TestZero()
         {
             byte[] p_first = { 0x01 };
