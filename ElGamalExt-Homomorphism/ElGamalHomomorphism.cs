@@ -22,6 +22,48 @@ namespace ElGamalExt.Homomorphism
     {
         public static byte[] Multiply(byte[] p_first, byte[] p_second, byte[] p_P)
         {
+            var p_first_numerator = new byte[p_first.Length / 2];
+            Array.Copy(p_first, p_first_numerator, p_first.Length / 2);
+            var p_first_denominator = new byte[p_first.Length / 2];
+            Array.Copy(p_first, p_first.Length / 2, p_first_denominator, 0, p_first.Length / 2);
+            var p_second_numerator = new byte[p_second.Length / 2];
+            Array.Copy(p_second, p_second_numerator, p_second.Length / 2);
+            var p_second_denominator = new byte[p_second.Length / 2];
+            Array.Copy(p_second, p_second.Length / 2, p_second_denominator, 0, p_second.Length / 2);
+
+            var mul_numerator = MultiplyParts(p_first_numerator, p_second_numerator, p_P);
+            var mul_denominator = MultiplyParts(p_first_denominator, p_second_denominator, p_P);
+
+            var mul = new byte[p_first.Length];
+            Array.Copy(mul_numerator, 0, mul, 0, mul_numerator.Length);
+            Array.Copy(mul_denominator, 0, mul, mul.Length / 2, mul_denominator.Length);
+
+            return mul;
+        }
+
+        public static byte[] Divide(byte[] p_first, byte[] p_second, byte[] p_P)
+        {
+            var p_first_numerator = new byte[p_first.Length / 2];
+            Array.Copy(p_first, p_first_numerator, p_first.Length / 2);
+            var p_first_denominator = new byte[p_first.Length / 2];
+            Array.Copy(p_first, p_first.Length / 2, p_first_denominator, 0, p_first.Length / 2);
+            var p_second_numerator = new byte[p_second.Length / 2];
+            Array.Copy(p_second, p_second_numerator, p_second.Length / 2);
+            var p_second_denominator = new byte[p_second.Length / 2];
+            Array.Copy(p_second, p_second.Length / 2, p_second_denominator, 0, p_second.Length / 2);
+
+            var div_numerator = MultiplyParts(p_first_numerator, p_second_denominator, p_P);
+            var div_denominator = MultiplyParts(p_first_denominator, p_second_numerator, p_P);
+
+            var div = new byte[p_first.Length];
+            Array.Copy(div_numerator, 0, div, 0, div_numerator.Length);
+            Array.Copy(div_denominator, 0, div, div.Length / 2, div_denominator.Length);
+
+            return div;
+        }
+
+        private static byte[] MultiplyParts(byte[] p_first, byte[] p_second, byte[] p_P)
+        {
             var blocksize = p_first.Length;
 
             var res = new byte[blocksize];
