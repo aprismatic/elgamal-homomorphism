@@ -5,30 +5,30 @@ namespace ElGamalHomoTests
 {
     public class ElGamalHomoTests
     {
-        [Fact(DisplayName = "Multiplication Zero")]
+        [Fact(DisplayName = "Multiplication")]
         public void Mul_Zero()
         {
-            byte[] p_first = { 0x01, 0x01 };
-            byte[] p_second = { 0x01, 0x01 };
-            byte[] p_P = { 0x01 };
-            byte[] expected = { 0x00, 0x00 };
+            byte[] first = { 1, 2, 3, 4 };
+            byte[] second = { 5, 6, 7, 8 };
+            byte[] P = { 10 };
+            byte[] expected = { 5, 2, 1, 2 };
 
-            var res = ElGamalHomomorphism.Multiply(p_first, p_second, p_P);
+            var res = ElGamalHomomorphism.Multiply(first, second, P);
 
-            Assert.Equal(expected[0], res[0]);
+            Assert.Equal(expected, res);
         }
 
         [Fact(DisplayName = "Division Zero")]
         public void Div_Zero()
         {
-            byte[] p_first = { 0x01, 0x01 };
-            byte[] p_second = { 0x01, 0x01 };
-            byte[] p_P = { 0x01 };
-            byte[] expected = { 0x00, 0x00 };
+            byte[] first = { 1, 2, 3, 4 };
+            byte[] second = { 5, 6, 7, 8 };
+            byte[] P = { 10 };
+            byte[] expected = { 7, 6, 5, 4 };
 
-            var res = ElGamalHomomorphism.Divide(p_first, p_second, p_P);
+            var res = ElGamalHomomorphism.Divide(first, second, P);
 
-            Assert.Equal(expected[0], res[0]);
+            Assert.Equal(expected, res);
         }
     }
 }
