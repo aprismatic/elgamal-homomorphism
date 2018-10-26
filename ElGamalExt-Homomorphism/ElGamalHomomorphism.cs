@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace Aprismatic.Cryptography
+namespace Aprismatic.ElGamalExt.Homomorphism
 {
     public static class ElGamalHomomorphism
     {

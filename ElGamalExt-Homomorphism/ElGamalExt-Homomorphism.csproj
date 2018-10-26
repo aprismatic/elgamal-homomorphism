@@ -6,6 +6,6 @@
     <Company>Nanyang Technological Unviersity</Company>
     <Product>ElGamalExt-Homomorphism</Product>
     <Authors>Vasily Sidorov (bazzilic)</Authors>
-    <RootNamespace>Aprismatic.Cryptography</RootNamespace>
+    <RootNamespace>Aprismatic.ElGamalExt</RootNamespace>
   </PropertyGroup>
 </Project>
