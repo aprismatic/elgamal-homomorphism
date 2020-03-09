@@ -5,11 +5,25 @@ on:
     branches: [ master ]
 
 jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Upload project files
+      uses: actions/upload-artifact@v1
+      with:
+        name: project-files
+        path: .
+
   versioning:
+    needs: pull
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
-    - uses: actions/checkout@v2
+    - name: Download project files
+      uses: actions/download-artifact@v1
+      with:
+        name: project-files
     - name: Get the tag version
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
@@ -24,6 +38,7 @@ jobs:
         path: .
 
   build:
+    needs: pull
     runs-on: windows-latest
     steps:
     - name: Download project files with patched version
