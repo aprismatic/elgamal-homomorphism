@@ -24,6 +24,7 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: project-files
+        path: .
     - name: Get the tag version
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
@@ -45,6 +46,7 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: project-files
+        path: .
     - name: Setup nuget
       uses: warrenbuckley/Setup-Nuget@v1
     - name: Restore packages
@@ -69,6 +71,7 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: build-artifacts
+        path: .
     - name: Pack nuget packages
       run: dotnet pack --configuration Release --include-symbols --no-build
     # - name: Publish nuget packages
