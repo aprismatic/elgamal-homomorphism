@@ -1,4 +1,4 @@
-name: .NET Core and Framework test and publish to NuGet
+name: .NET CI/CD
 
 on:
   push:
@@ -14,16 +14,21 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup Nuget.exe
+    # - name: Setup dotnet
+    #   uses: actions/setup-dotnet@v1
+    #   with:
+    #     dotnet-version: '1.1.14' # SDK Version to use.
+
+    - name: Setup nuget
       uses: warrenbuckley/Setup-Nuget@v1
 
     - name: Restore packages
       run: nuget restore
 
-    - name: Add MSBuild to PATH
+    - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.0
 
-    - name: Build with MSBuild
+    - name: Build with msbuild
       run: msbuild -p:Configuration=Release
 
     - name: Run tests
