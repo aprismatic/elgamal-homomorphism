@@ -5,15 +5,19 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  versioning:
     runs-on: windows-latest
-    env:
-      TAG_VERSION: 0.0.0
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+    - name: Get the tag version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
+
+  build:
+    needs: pull
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Get the tag version
-      if: startsWith(github.ref, 'refs/tags/v')
-      run: echo ::set-env name=VERSION::${GITHUB_REF#refs/tags/v}
     - name: Setup nuget
       uses: warrenbuckley/Setup-Nuget@v1
     - name: Restore packages
@@ -21,7 +25,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.0
     - name: Build with msbuild
-      run: msbuild -p:Configuration=Release -p:Version=$TAG_VERSION
+      run: msbuild -p:Configuration=Release;Version=${{ jobs.versioning.steps.get_version.outputs.VERSION }}
     - name: Run tests
       run: dotnet test --configuration Release --no-build
     - name: Upload build artifacts
@@ -31,8 +35,7 @@ jobs:
         path: .
 
   publish:
-    needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [versioning, build]
     runs-on: windows-latest
     steps:
     - name: Download build artifacts
