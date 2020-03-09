@@ -11,6 +11,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ElGamalExt-Homomorphism\ElGamalExt-Homomorphism.csproj" />
+    <ProjectReference Include="..\..\src\Aprismatic.ElGamalExt.Homomorphism\Aprismatic.ElGamalExt.Homomorphism.csproj" />
   </ItemGroup>
 </Project>
