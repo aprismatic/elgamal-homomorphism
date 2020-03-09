@@ -14,11 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    # - name: Setup dotnet
-    #   uses: actions/setup-dotnet@v1
-    #   with:
-    #     dotnet-version: '1.1.14' # SDK Version to use.
-
     - name: Setup nuget
       uses: warrenbuckley/Setup-Nuget@v1
 
@@ -32,4 +27,7 @@ jobs:
       run: msbuild -p:Configuration=Release
 
     - name: Run tests
-      run: dotnet test --no-build
+      run: dotnet test --configuration Release --no-build
+
+    - name: Pack nuget packages
+      run: dotnet pack --configuration Release --include-symbols --no-build
