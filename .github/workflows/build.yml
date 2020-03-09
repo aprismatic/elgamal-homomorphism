@@ -24,7 +24,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.0
 
     - name: Build with MSBuild
-      run: msbuild build --configuration Release
+      run: msbuild -p:Configuration=Release
 
     - name: Run tests
       run: dotnet test --no-build
