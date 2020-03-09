@@ -5,48 +5,19 @@ on:
     branches: [ master ]
 
 jobs:
-  pull:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Upload project files
-      uses: actions/upload-artifact@v1
-      with:
-        name: project-files
-        path: .
-
   versioning:
-    needs: pull
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
-    - name: Download project files
-      uses: actions/download-artifact@v1
-      with:
-        name: project-files
-        path: .
     - name: Get the tag version
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
-    - name: Update project version
-      uses: roryprimrose/set-vs-sdk-project-version@v1
-      with:
-        version: ${{ steps.get_version.outputs.VERSION }}
-    - name: Upload project files with patched version
-      uses: actions/upload-artifact@v1
-      with:
-        name: project-files
-        path: .
 
   build:
     needs: pull
     runs-on: windows-latest
     steps:
-    - name: Download project files with patched version
-      uses: actions/download-artifact@v1
-      with:
-        name: project-files
-        path: .
+    - uses: actions/checkout@v2
     - name: Setup nuget
       uses: warrenbuckley/Setup-Nuget@v1
     - name: Restore packages
@@ -54,7 +25,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.0
     - name: Build with msbuild
-      run: msbuild -p:Configuration=Release
+      run: msbuild -p:Configuration=Release;Version=${{ jobs.versioning.steps.get_version.outputs.VERSION }}
     - name: Run tests
       run: dotnet test --configuration Release --no-build
     - name: Upload build artifacts
