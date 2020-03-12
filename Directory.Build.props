@@ -8,6 +8,7 @@
     <PackageIconUrl>https://raw.githubusercontent.com/aprismatic/elgamalext-homomorphism/master/images/icon.png</PackageIconUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/aprismatic/elgamalext-homomorphism</RepositoryUrl>
+    <Version>0.0.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
