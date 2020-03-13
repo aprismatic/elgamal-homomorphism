@@ -22,8 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElGamalHomoTests", "test\El
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{160DA015-B344-4914-9CDD-854332F4DE16}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\check.yml = .github\workflows\check.yml
-		.github\workflows\release.yml = .github\workflows\release.yml
+		.github\workflows\release-dotnet-nuget.yml = .github\workflows\release-dotnet-nuget.yml
+		.github\workflows\test-dotnet-windows.yml = .github\workflows\test-dotnet-windows.yml
 	EndProjectSection
 EndProject
 Global

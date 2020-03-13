@@ -1,4 +1,4 @@
-name: Check
+name: Test .NET (Windows)
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  test:
     runs-on: windows-latest
     steps:
     - name: Checkout
@@ -27,20 +27,5 @@ jobs:
       run: nuget restore
     - name: Build with msbuild
       run: msbuild -p:Configuration=Release
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v1
-      with:
-        name: build-artifacts
-        path: .
-
-  test:
-    needs: build
-    runs-on: windows-latest
-    steps:
-    - name: Download build artifacts
-      uses: actions/download-artifact@v1
-      with:
-        name: build-artifacts
-        path: .
     - name: Run tests
       run: dotnet test --configuration Release --no-build

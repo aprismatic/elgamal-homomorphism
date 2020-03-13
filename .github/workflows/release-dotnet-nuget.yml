@@ -1,11 +1,11 @@
-name: Release
+name: Release .NET NuGet
 
 on:
   release:
-    types: [published, created, edited]
+    types: [created]
 
 jobs:
-  build:
+  test:
     runs-on: windows-latest
     steps:
     - name: Checkout
@@ -24,22 +24,7 @@ jobs:
     - name: Restore packages
       run: nuget restore
     - name: Build with msbuild
-      run: msbuild -p:Configuration=Release -p:Version=${{ github.event.release.tag_name }}
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v1
-      with:
-        name: build-artifacts
-        path: .
-
-  test:
-    needs: build
-    runs-on: windows-latest
-    steps:
-    - name: Download build artifacts
-      uses: actions/download-artifact@v1
-      with:
-        name: build-artifacts
-        path: .
+      run: msbuild -p:Configuration=Release
     - name: Run tests
       run: dotnet test --configuration Release --no-build
 
@@ -47,11 +32,16 @@ jobs:
     needs: test
     runs-on: windows-latest
     steps:
-    - name: Download build artifacts
-      uses: actions/download-artifact@v1
-      with:
-        name: build-artifacts
-        path: .
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Get version
+      id: get_version
+      run: |
+        tag_name=${{ github.event.release.tag_name }}
+        echo ::set-output name=VERSION::${tag_name:1}
+      shell: bash
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.0
     - name: Setup nuget
       uses: nuget/setup-nuget@v1
     - name: Update nuget source
@@ -61,7 +51,11 @@ jobs:
                              -UserName ${{ secrets.GithubUsername }} `
                              -Password ${{ secrets.GithubToken }} `
                              -ConfigFile ./nuget.config
+    - name: Restore packages
+      run: nuget restore
+    - name: Build with msbuild
+      run: msbuild -p:Configuration=Release -p:Version=${{ steps.get_version.outputs.VERSION }}
     - name: Pack nuget packages
-      run: dotnet pack --configuration Release --no-build -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:PackageVersion=${{ github.event.release.tag_name }}
+      run: dotnet pack --configuration Release --no-build -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:PackageVersion=${{ steps.get_version.outputs.VERSION }}
     - name: Publish nuget packages
       run: dotnet nuget push **/*.nupkg --source "github"
