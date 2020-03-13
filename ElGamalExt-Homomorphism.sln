@@ -7,8 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		appveyor.yml = appveyor.yml
 		Directory.Build.props = Directory.Build.props
+		nuget.config = nuget.config
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -16,20 +16,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6E82EE2D-924
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{17A405E5-E5B7-4426-9C77-36D7B416C5FC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{389BC6FC-B547-42B0-8540-D97836136E46}"
-	ProjectSection(SolutionItems) = preProject
-		images\icon.png = images\icon.png
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aprismatic.ElGamalExt.Homomorphism", "src\Aprismatic.ElGamalExt.Homomorphism\Aprismatic.ElGamalExt.Homomorphism.csproj", "{1C88C4DE-2866-4817-B0EE-9A7AA17542A6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElGamalHomoTests", "test\ElGamalHomoTests\ElGamalHomoTests.csproj", "{9A9AA8CA-110F-4C86-B89C-030E7C1E4945}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{DAABAB8B-81C4-4615-AACA-D2D59FB59030}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{8D7051AE-CA79-4059-8B6C-A5380A33CCE4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{160DA015-B344-4914-9CDD-854332F4DE16}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\ci.yml = .github\workflows\ci.yml
+		.github\workflows\check.yml = .github\workflows\check.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
 Global
@@ -53,7 +47,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1C88C4DE-2866-4817-B0EE-9A7AA17542A6} = {6E82EE2D-9243-4B59-9692-C8E23E56320B}
 		{9A9AA8CA-110F-4C86-B89C-030E7C1E4945} = {17A405E5-E5B7-4426-9C77-36D7B416C5FC}
-		{8D7051AE-CA79-4059-8B6C-A5380A33CCE4} = {DAABAB8B-81C4-4615-AACA-D2D59FB59030}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {195B4272-CCC0-4E18-9493-B553A147ECF3}
