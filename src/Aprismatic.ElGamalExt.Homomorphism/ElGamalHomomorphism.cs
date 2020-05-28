@@ -76,5 +76,67 @@ namespace Aprismatic.ElGamalExt.Homomorphism
 
             return res;
         }
+
+
+        public static byte[] MultiplyNew(byte[] first, byte[] second, byte[] P)
+        {
+            var hb = first.Length >> 1;
+
+            var fas = first.AsSpan();
+            var sas = second.AsSpan();
+
+            var firstNumerator = fas.Slice(0, hb);
+            var firstDenominator = fas.Slice(hb, hb);
+
+            var secondNumerator = sas.Slice(0, hb);
+            var secondDenominator = sas.Slice(hb, hb);
+
+            var res = new byte[first.Length];
+            var ras = res.AsSpan();
+            MultiplyPartsNew(firstNumerator, secondNumerator, P, ras.Slice(0, hb));
+            MultiplyPartsNew(firstDenominator, secondDenominator, P, ras.Slice(hb, hb));
+
+            return res;
+        }
+
+        public static byte[] DivideNew(byte[] first, byte[] second, byte[] P)
+        {
+            var hb = first.Length >> 1;
+
+            var fas = first.AsSpan();
+            var sas = second.AsSpan();
+
+            var firstNumerator = fas.Slice(0, hb);
+            var firstDenominator = fas.Slice(hb, hb);
+
+            var secondNumerator = sas.Slice(0, hb);
+            var secondDenominator = sas.Slice(hb, hb);
+
+            var res = new byte[first.Length];
+            var ras = res.AsSpan();
+            MultiplyPartsNew(firstNumerator, secondDenominator, P, ras.Slice(0, hb));
+            MultiplyPartsNew(firstDenominator, secondNumerator, P, ras.Slice(hb, hb));
+
+            return res;
+        }
+
+        private static void MultiplyPartsNew(ReadOnlySpan<byte> first, ReadOnlySpan<byte> second, byte[] P, Span<byte> dest)
+        {
+            var hb = first.Length >> 1;
+
+            var A_left = new BigInteger(first.Slice(0, hb));
+            var A_right = new BigInteger(first.Slice(hb, hb));
+
+            var B_left = new BigInteger(second.Slice(0, hb));
+            var B_right = new BigInteger(second.Slice(hb, hb));
+
+            var Pbi = new BigInteger(P);
+
+            var res_left = (A_left * B_left) % Pbi;
+            var res_right = (A_right * B_right) % Pbi;
+
+            res_left.TryWriteBytes(dest.Slice(0, hb), out _);
+            res_right.TryWriteBytes(dest.Slice(hb, hb), out _);
+        }
     }
 }
