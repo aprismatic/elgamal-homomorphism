@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.1;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <Description>Extension for the .NET Framework cryptography subsystem, which introduces the ElGamal public key cryptosystem with support for homomorphic multiplication.</Description>
   </PropertyGroup>
 </Project>

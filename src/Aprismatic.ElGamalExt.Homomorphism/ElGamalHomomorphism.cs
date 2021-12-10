@@ -5,76 +5,86 @@ namespace Aprismatic.ElGamalExt.Homomorphism
 {
     public static class ElGamalHomomorphism
     {
-        public static byte[] Multiply(byte[] first, byte[] second, byte[] P)
+        /// <summary>
+        /// Performs a homomorphic multiplication of two encrypted BigFraction values.
+        /// </summary>
+        /// <param name="first">First BigFraction to multiply</param>
+        /// <param name="second">Second BigFraction to multiply</param>
+        /// <param name="P">ElGamal modulo</param>
+        /// <returns>Byte array that contains an ElGamal encryption of the product of the two BigFractions</returns>
+        public static byte[] MultiplyFractions(byte[] first, byte[] second, byte[] P)
         {
-            var firstNumerator = new byte[first.Length / 2];
-            Array.Copy(first, firstNumerator, first.Length / 2);
-            var firstDenominator = new byte[first.Length / 2];
-            Array.Copy(first, first.Length / 2, firstDenominator, 0, first.Length / 2);
-            var secondNumerator = new byte[second.Length / 2];
-            Array.Copy(second, secondNumerator, second.Length / 2);
-            var secondDenominator = new byte[second.Length / 2];
-            Array.Copy(second, second.Length / 2, secondDenominator, 0, second.Length / 2);
+            var hb = first.Length >> 1;
 
-            var mulNumerator = MultiplyParts(firstNumerator, secondNumerator, P);
-            var mulDenominator = MultiplyParts(firstDenominator, secondDenominator, P);
+            var fas = first.AsSpan();
+            var sas = second.AsSpan();
 
-            var mul = new byte[first.Length];
-            Array.Copy(mulNumerator, 0, mul, 0, mulNumerator.Length);
-            Array.Copy(mulDenominator, 0, mul, mul.Length / 2, mulDenominator.Length);
+            var firstNumerator = fas.Slice(0, hb);
+            var firstDenominator = fas.Slice(hb, hb);
 
-            return mul;
+            var secondNumerator = sas.Slice(0, hb);
+            var secondDenominator = sas.Slice(hb, hb);
+
+            var res = new byte[first.Length];
+            var ras = res.AsSpan();
+            MultiplyIntegers(firstNumerator, secondNumerator, P, ras.Slice(0, hb));
+            MultiplyIntegers(firstDenominator, secondDenominator, P, ras.Slice(hb, hb));
+
+            return res;
         }
 
-        public static byte[] Divide(byte[] first, byte[] second, byte[] P)
+        /// <summary>
+        /// Performs a homomorphic division of two encrypted BigFraction values. Works through multiplying the first BigFraction by a flipped second BigFraction.
+        /// </summary>
+        /// <param name="first">BigFraction to divide</param>
+        /// <param name="second">BigFraction to divide by</param>
+        /// <param name="P">ElGamal modulo</param>
+        /// <returns>Byte array that contains an ElGamal encryption of the quotient of the two BigFractions</returns>
+        public static byte[] DivideFractions(byte[] first, byte[] second, byte[] P)
         {
-            var firstNumerator = new byte[first.Length / 2];
-            Array.Copy(first, firstNumerator, first.Length / 2);
-            var firstDenominator = new byte[first.Length / 2];
-            Array.Copy(first, first.Length / 2, firstDenominator, 0, first.Length / 2);
-            var secondNumerator = new byte[second.Length / 2];
-            Array.Copy(second, secondNumerator, second.Length / 2);
-            var secondDenominator = new byte[second.Length / 2];
-            Array.Copy(second, second.Length / 2, secondDenominator, 0, second.Length / 2);
+            var hb = first.Length >> 1;
 
-            var divNumerator = MultiplyParts(firstNumerator, secondDenominator, P);
-            var divDenominator = MultiplyParts(firstDenominator, secondNumerator, P);
+            var fas = first.AsSpan();
+            var sas = second.AsSpan();
 
-            var div = new byte[first.Length];
-            Array.Copy(divNumerator, 0, div, 0, divNumerator.Length);
-            Array.Copy(divDenominator, 0, div, div.Length / 2, divDenominator.Length);
+            var firstNumerator = fas.Slice(0, hb);
+            var firstDenominator = fas.Slice(hb, hb);
 
-            return div;
+            var secondNumerator = sas.Slice(0, hb);
+            var secondDenominator = sas.Slice(hb, hb);
+
+            var res = new byte[first.Length];
+            var ras = res.AsSpan();
+            MultiplyIntegers(firstNumerator, secondDenominator, P, ras.Slice(0, hb));
+            MultiplyIntegers(firstDenominator, secondNumerator, P, ras.Slice(hb, hb));
+
+            return res;
         }
 
-        private static byte[] MultiplyParts(byte[] first, byte[] second, byte[] P)
+        /// <summary>
+        /// Lower level function that performs a homomorphic multiplication of two encrypted BigInteger values.
+        /// </summary>
+        /// <param name="first">BigFraction to divide</param>
+        /// <param name="second">BigFraction to divide by</param>
+        /// <param name="P">ElGamal modulo</param>
+        /// <param name="dest">Byte span to write the ElGamal encryption of the product of the two BigIntegers to</param>
+        public static void MultiplyIntegers(ReadOnlySpan<byte> first, ReadOnlySpan<byte> second, byte[] P, Span<byte> dest)
         {
-            var blocksize = first.Length;
+            var hb = first.Length >> 1;
 
-            var res = new byte[blocksize];
+            var A_left = new BigInteger(first.Slice(0, hb));
+            var A_right = new BigInteger(first.Slice(hb, hb));
 
-            var temp = new byte[blocksize / 2];
-            Array.Copy(first, temp, blocksize / 2);
-            var A_left = new BigInteger(temp);
-            Array.Copy(first, blocksize / 2, temp, 0, blocksize / 2);
-            var A_right = new BigInteger(temp);
-            Array.Copy(second, temp, blocksize / 2);
-            var B_left = new BigInteger(temp);
-            Array.Copy(second, blocksize / 2, temp, 0, blocksize / 2);
-            var B_right = new BigInteger(temp);
+            var B_left = new BigInteger(second.Slice(0, hb));
+            var B_right = new BigInteger(second.Slice(hb, hb));
 
             var Pbi = new BigInteger(P);
 
             var res_left = (A_left * B_left) % Pbi;
             var res_right = (A_right * B_right) % Pbi;
 
-            var cAbytes = res_left.ToByteArray();
-            var cBbytes = res_right.ToByteArray();
-
-            Array.Copy(cAbytes, 0, res, 0, cAbytes.Length);
-            Array.Copy(cBbytes, 0, res, blocksize / 2, cBbytes.Length);
-
-            return res;
+            res_left.TryWriteBytes(dest.Slice(0, hb), out _);
+            res_right.TryWriteBytes(dest.Slice(hb, hb), out _);
         }
     }
 }
