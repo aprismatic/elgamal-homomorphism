@@ -10,8 +10,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.0
     - name: Setup nuget
       uses: nuget/setup-nuget@v1
     - name: Update nuget source
@@ -23,8 +21,8 @@ jobs:
                              -ConfigFile ./nuget.config
     - name: Restore packages
       run: nuget restore
-    - name: Build with msbuild
-      run: msbuild -p:Configuration=Release
+    - name: Build with dotnet
+      run: dotnet build --configuration Release --no-restore
     - name: Run tests
       run: dotnet test --configuration Release --no-build
 
@@ -34,8 +32,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.0
     - name: Setup nuget
       uses: nuget/setup-nuget@v1
     - name: Update nuget source
@@ -47,8 +43,8 @@ jobs:
                              -ConfigFile ./nuget.config
     - name: Restore packages
       run: nuget restore
-    - name: Build with msbuild
-      run: msbuild -p:Configuration=Release -p:Version=${{ github.event.release.tag_name }}
+    - name: Build with dotnet
+      run: dotnet build --configuration Release --no-restore -p:Version=${{ github.event.release.tag_name }}
     - name: Pack nuget packages
       run: dotnet pack --configuration Release --no-build --output nupkgs -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:PackageVersion=${{ github.event.release.tag_name }}
     - name: Publish nuget packages
