@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Numerics;
 
-namespace Aprismatic.ElGamalExt.Homomorphism
+namespace Aprismatic.ElGamal.Homomorphism
 {
+    /// <summary>
+    /// The class implements the homomorphism of the ElGamal encryption scheme.
+    /// </summary>
     public static class ElGamalHomomorphism
     {
         /// <summary>
@@ -12,18 +15,15 @@ namespace Aprismatic.ElGamalExt.Homomorphism
         /// <param name="second">Second BigFraction to multiply</param>
         /// <param name="P">ElGamal modulo</param>
         /// <returns>Byte array that contains an ElGamal encryption of the product of the two BigFractions</returns>
-        public static byte[] MultiplyFractions(byte[] first, byte[] second, byte[] P)
+        public static byte[] MultiplyFractions(ReadOnlySpan<byte> first, ReadOnlySpan<byte> second, ReadOnlySpan<byte> P)
         {
             var hb = first.Length >> 1;
 
-            var fas = first.AsSpan();
-            var sas = second.AsSpan();
+            var firstNumerator = first.Slice(0, hb);
+            var firstDenominator = first.Slice(hb, hb);
 
-            var firstNumerator = fas.Slice(0, hb);
-            var firstDenominator = fas.Slice(hb, hb);
-
-            var secondNumerator = sas.Slice(0, hb);
-            var secondDenominator = sas.Slice(hb, hb);
+            var secondNumerator = second.Slice(0, hb);
+            var secondDenominator = second.Slice(hb, hb);
 
             var res = new byte[first.Length];
             var ras = res.AsSpan();
@@ -40,18 +40,15 @@ namespace Aprismatic.ElGamalExt.Homomorphism
         /// <param name="second">BigFraction to divide by</param>
         /// <param name="P">ElGamal modulo</param>
         /// <returns>Byte array that contains an ElGamal encryption of the quotient of the two BigFractions</returns>
-        public static byte[] DivideFractions(byte[] first, byte[] second, byte[] P)
+        public static byte[] DivideFractions(ReadOnlySpan<byte> first, ReadOnlySpan<byte> second, ReadOnlySpan<byte> P)
         {
             var hb = first.Length >> 1;
 
-            var fas = first.AsSpan();
-            var sas = second.AsSpan();
+            var firstNumerator = first.Slice(0, hb);
+            var firstDenominator = first.Slice(hb, hb);
 
-            var firstNumerator = fas.Slice(0, hb);
-            var firstDenominator = fas.Slice(hb, hb);
-
-            var secondNumerator = sas.Slice(0, hb);
-            var secondDenominator = sas.Slice(hb, hb);
+            var secondNumerator = second.Slice(0, hb);
+            var secondDenominator = second.Slice(hb, hb);
 
             var res = new byte[first.Length];
             var ras = res.AsSpan();
@@ -68,7 +65,7 @@ namespace Aprismatic.ElGamalExt.Homomorphism
         /// <param name="second">BigFraction to divide by</param>
         /// <param name="P">ElGamal modulo</param>
         /// <param name="dest">Byte span to write the ElGamal encryption of the product of the two BigIntegers to</param>
-        public static void MultiplyIntegers(ReadOnlySpan<byte> first, ReadOnlySpan<byte> second, byte[] P, Span<byte> dest)
+        public static void MultiplyIntegers(ReadOnlySpan<byte> first, ReadOnlySpan<byte> second, ReadOnlySpan<byte> P, Span<byte> dest)
         {
             var hb = first.Length >> 1;
 

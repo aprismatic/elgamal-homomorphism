@@ -5,7 +5,6 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A6502C7E-9F34-40F1-97D8-E6631867E613}"
 	ProjectSection(SolutionItems) = preProject
-		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
 		nuget.config = nuget.config
@@ -16,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6E82EE2D-924
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{17A405E5-E5B7-4426-9C77-36D7B416C5FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aprismatic.ElGamalExt.Homomorphism", "src\Aprismatic.ElGamalExt.Homomorphism\Aprismatic.ElGamalExt.Homomorphism.csproj", "{1C88C4DE-2866-4817-B0EE-9A7AA17542A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aprismatic.ElGamal.Homomorphism", "src\Aprismatic.ElGamal.Homomorphism\Aprismatic.ElGamal.Homomorphism.csproj", "{1C88C4DE-2866-4817-B0EE-9A7AA17542A6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElGamalHomoTests", "test\ElGamalHomoTests\ElGamalHomoTests.csproj", "{9A9AA8CA-110F-4C86-B89C-030E7C1E4945}"
 EndProject

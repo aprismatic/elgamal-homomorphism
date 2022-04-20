@@ -1,4 +1,4 @@
-﻿using Aprismatic.ElGamalExt.Homomorphism;
+﻿using Aprismatic.ElGamal.Homomorphism;
 using Xunit;
 
 namespace ElGamalHomoTests
