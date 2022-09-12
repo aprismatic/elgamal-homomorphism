@@ -10,20 +10,18 @@ jobs:
   test:
     runs-on: windows-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Setup nuget
-      uses: nuget/setup-nuget@v1
-    - name: Update nuget source
-      run: |
-        nuget sources update -Name 'github' `
-                             -Source https://nuget.pkg.github.com/aprismatic/index.json `
-                             -UserName ${{ secrets.GithubUsername }} `
-                             -Password ${{ secrets.GithubToken }} `
-                             -ConfigFile ./nuget.config
-    - name: Restore packages
-      run: nuget restore
-    - name: Build with dotnet
-      run: dotnet build --configuration Release --no-restore
-    - name: Run tests
-      run: dotnet test --configuration Release --no-build
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Add github packages store as NuGet source
+        run: |
+          dotnet nuget update source github `
+                                     --source https://nuget.pkg.github.com/aprismatic/index.json `
+                                     --username "${{ github.actor }}" `
+                                     --password "${{ github.token }}" `
+                                     --configfile ./nuget.config
+      - name: Restore packages
+        run: dotnet restore
+      - name: Build with dotnet
+        run: dotnet build --configuration Release --no-restore
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build

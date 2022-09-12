@@ -9,18 +9,16 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-    - name: Setup nuget
-      uses: nuget/setup-nuget@v1
-    - name: Update nuget source
+      uses: actions/checkout@v3
+    - name: Add github packages store as NuGet source
       run: |
-        nuget sources update -Name 'github' `
-                             -Source https://nuget.pkg.github.com/aprismatic/index.json `
-                             -UserName ${{ secrets.GithubUsername }} `
-                             -Password ${{ secrets.GithubToken }} `
-                             -ConfigFile ./nuget.config
+        dotnet nuget update source github `
+                                   --source https://nuget.pkg.github.com/aprismatic/index.json `
+                                   --username "${{ github.actor }}" `
+                                   --password "${{ github.token }}" `
+                                   --configfile ./nuget.config
     - name: Restore packages
-      run: nuget restore
+      run: dotnet restore
     - name: Build with dotnet
       run: dotnet build --configuration Release --no-restore
     - name: Run tests
@@ -31,18 +29,16 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-    - name: Setup nuget
-      uses: nuget/setup-nuget@v1
-    - name: Update nuget source
+      uses: actions/checkout@v3
+    - name: Add github packages store as NuGet source
       run: |
-        nuget sources update -Name 'github' `
-                             -Source https://nuget.pkg.github.com/aprismatic/index.json `
-                             -UserName ${{ secrets.GithubUsername }} `
-                             -Password ${{ secrets.GithubToken }} `
-                             -ConfigFile ./nuget.config
+        dotnet nuget update source github `
+                                   --source https://nuget.pkg.github.com/aprismatic/index.json `
+                                   --username "${{ github.actor }}" `
+                                   --password "${{ github.token }}" `
+                                   --configfile ./nuget.config
     - name: Restore packages
-      run: nuget restore
+      run: dotnet restore
     - name: Build with dotnet
       run: dotnet build --configuration Release --no-restore -p:Version=${{ github.event.release.tag_name }}
     - name: Pack nuget packages
@@ -67,6 +63,6 @@ jobs:
     - name: Release artifacts
       uses: skx/github-action-publish-binaries@master
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
       with:
         args: 'nupkgs/*'
